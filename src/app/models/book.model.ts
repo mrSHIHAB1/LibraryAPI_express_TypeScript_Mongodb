@@ -1,5 +1,5 @@
-import mongoose, { Schema, model } from 'mongoose';
-import { IBook } from '../interfaces/book.interface';
+import mongoose, { Model, Schema, model } from 'mongoose';
+import { IBook} from '../interfaces/book.interface';
 
 
 const bookSchema = new Schema<IBook>(
@@ -19,9 +19,9 @@ const bookSchema = new Schema<IBook>(
   { timestamps: true }
 );
 
-bookSchema.methods.updateAvailability = function () {
-  this.available = this.copies > 0;
-};
+// bookSchema.method("getquantity",function(copies:number){
+// //complete it
+// })
 
 
 export const Book = model<IBook>('Book', bookSchema);

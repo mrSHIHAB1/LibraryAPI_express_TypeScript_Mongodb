@@ -6,5 +6,9 @@ export interface IBook {
   description?: string;
   copies: number;
   available?: boolean;
-  updateAvailability: () => void;
+  
 }
+ 
+// export interface UserInstanceMethods{
+//   getquantity(quantity:number):Promise<void>;
+// }

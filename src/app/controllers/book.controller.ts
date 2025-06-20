@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express';
 import { Book } from '../models/book.model';
 
 export const bookroutes = express.Router();
-
+export const borrowroutes=express.Router();
 
 bookroutes.post('/', async (req: Request, res: Response) => {
   try {
@@ -20,6 +20,7 @@ bookroutes.post('/', async (req: Request, res: Response) => {
     });
   }
 });
+
 
 
 bookroutes.get('/', async (req: Request, res: Response) => {
