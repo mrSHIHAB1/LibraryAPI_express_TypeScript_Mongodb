@@ -19,9 +19,36 @@ const bookSchema = new Schema<IBook>(
   { timestamps: true }
 );
 
-// bookSchema.method("getquantity",function(copies:number){
-// //complete it
-// })
+bookSchema.post('save', function (doc) {
+  console.log(`New Book Created: Title: ${doc.title},  ISBN: ${doc.isbn}`);
+});
 
+bookSchema.pre('find', function (next) {
+  console.log('Book find operation ');
+  next();
+});
+
+
+
+bookSchema.pre('findOneAndUpdate', function (next) {
+  console.log('Book updating');
+  next();
+});
+
+
+bookSchema.post('findOneAndUpdate', function (doc) {
+  console.log(`Book updated: "${doc?.title}"`);
+});
+
+
+bookSchema.pre('findOneAndDelete', function (next) {
+  console.log('Book deleting');
+  next();
+});
+
+
+bookSchema.post('findOneAndDelete', function (doc) {
+  console.log(`Deleted book: "${doc?.title}"`);
+});
 
 export const Book = model<IBook>('Book', bookSchema);

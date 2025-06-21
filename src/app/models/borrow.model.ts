@@ -11,4 +11,14 @@ const borrowSchema = new Schema<IBorrow>(
   { timestamps: true }
 );
 
+borrowSchema.pre('save', function (next) {
+  console.log(`Borrowing book: ${this.book}`);
+  next();
+});
+
+
+borrowSchema.post('save', function (doc) {
+  console.log(`Book borrowed successfully:Book ID: ${doc.book},Quantity: ${doc.quantity}`);
+});
+
 export const Borrow = model<IBorrow>('Borrow', borrowSchema);

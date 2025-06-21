@@ -81,7 +81,7 @@ bookroutes.delete('/:bookId', async (req: Request, res: Response) => {
 });
 
 
-bookroutes.patch('/:bookId', async (req: Request, res: Response) => {
+bookroutes.put('/:bookId', async (req: Request, res: Response) => {
   
     const bookId = req.params.bookId;
     const updateData = req.body;
