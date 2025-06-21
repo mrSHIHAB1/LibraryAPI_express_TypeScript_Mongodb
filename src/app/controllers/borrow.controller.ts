@@ -3,7 +3,7 @@ import express, { Request, Response } from 'express';
 import { Borrow } from '../models/borrow.model';
 import { Book } from '../models/book.model';
 
-export const borrowroutes=express.Router();
+export const borrowroutes = express.Router();
 
 borrowroutes.post('/', async (req: Request, res: Response) => {
   try {
@@ -15,62 +15,59 @@ borrowroutes.post('/', async (req: Request, res: Response) => {
         success: false,
         message: 'Invalid input',
       });
-       return
+      return
     }
 
-   
+
     if (!mongoose.Types.ObjectId.isValid(book)) {
       res.status(400).json({
         success: false,
         message: 'Invalid book ID',
       });
-       return
+      return
     }
 
-  
+
     const foundBook = await Book.findById(book);
     if (!foundBook) {
       res.status(404).json({
         success: false,
         message: 'Book not found',
       });
-       return
+      return
     }
 
 
     if (foundBook.copies < quantity) {
-     res.status(400).json({
+      res.status(400).json({
         success: false,
         message: `Only ${foundBook.copies} copies available`,
       });
-       return
+      return
     }
 
-   
-    foundBook.copies -= quantity;
-    if (foundBook.copies === 0) {
-      foundBook.available = false;
-    }
-    await foundBook.save();
+
+    await foundBook.reduceCopies(quantity);
+
 
     const borrow = await Borrow.create({
-       book,
+      book,
       quantity,
       dueDate: dueDate ? new Date(dueDate) : undefined,
       borrowedAt: new Date(),
-     
+
     });
 
-   res.status(201).json({
+    res.status(201).json({
       success: true,
       message: 'Book borrowed successfully',
-      data:{
-        _id:borrow._id,
-        book:borrow.book,
-        quantity:borrow.quantity,
-        dueDate:borrow.dueDate,
-         createdAt: borrow.createdAt,
-    updatedAt: borrow.updatedAt,
+      data: {
+        _id: borrow._id,
+        book: borrow.book,
+        quantity: borrow.quantity,
+        dueDate: borrow.dueDate,
+        createdAt: borrow.createdAt,
+        updatedAt: borrow.updatedAt,
       }
     });
 
@@ -88,19 +85,19 @@ borrowroutes.get('/', async (req: Request, res: Response) => {
     const summary = await Borrow.aggregate([
       {
         $group: {
-          _id: '$book',                    
+          _id: '$book',
           totalQuantity: { $sum: '$quantity' },
         },
       },
       {
         $lookup: {
-          from: 'books',                  
+          from: 'books',
           localField: '_id',
           foreignField: '_id',
           as: 'bookDetails',
         },
       },
-      { $unwind: '$bookDetails' },        
+      { $unwind: '$bookDetails' },
       {
         $project: {
           _id: 0,

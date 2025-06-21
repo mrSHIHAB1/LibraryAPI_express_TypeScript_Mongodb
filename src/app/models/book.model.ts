@@ -1,5 +1,5 @@
 import mongoose, { Model, Schema, model } from 'mongoose';
-import { IBook} from '../interfaces/book.interface';
+import { BookInstanceMethods, IBook } from '../interfaces/book.interface';
 
 
 const bookSchema = new Schema<IBook>(
@@ -16,16 +16,34 @@ const bookSchema = new Schema<IBook>(
     copies: { type: Number, required: true, min: 0 },
     available: { type: Boolean, default: true },
   },
-  { timestamps: true,
+  {
+    timestamps: true,
     toJSON: {
       transform(doc, ret) {
         delete ret.__v;
         return ret;
       }
     }
-   },
-  
+  },
+
 );
+
+
+
+bookSchema.methods.reduceCopies = async function (quantity: number): Promise<void> {
+  if (this.copies < quantity) {
+    throw new Error(`Only ${this.copies} copies available`);
+  }
+
+  this.copies -= quantity;
+  if (this.copies === 0) {
+    this.available = false;
+  }
+
+  await this.save();
+};
+
+
 
 bookSchema.post('save', function (doc) {
   console.log(`New Book Created: Title: ${doc.title},  ISBN: ${doc.isbn}`);
@@ -58,5 +76,9 @@ bookSchema.pre('findOneAndDelete', function (next) {
 bookSchema.post('findOneAndDelete', function (doc) {
   console.log(`Deleted book: "${doc?.title}"`);
 });
+type BookModelType = Model<IBook, {}, BookInstanceMethods>;
 
-export const Book = model<IBook>('Book', bookSchema);
+export const Book = model<IBook, BookModelType>('Book', bookSchema);
+
+
+// export const Book = model<IBook>('Book', bookSchema);

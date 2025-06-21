@@ -6,11 +6,14 @@ export interface IBook {
   description?: string;
   copies: number;
   available?: boolean;
-  
+
   createdAt?: Date;
   updatedAt?: Date;
 }
- 
+
 // export interface UserInstanceMethods{
 //   getquantity(quantity:number):Promise<void>;
 // }
+export interface BookInstanceMethods {
+  reduceCopies(quantity: number): Promise<void>;
+}
