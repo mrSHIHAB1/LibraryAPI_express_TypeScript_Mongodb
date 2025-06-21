@@ -5,4 +5,6 @@ export interface IBorrow {
   quantity: number;
   dueDate: Date;
   
+    createdAt?: Date;
+  updatedAt?: Date;
 }

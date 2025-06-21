@@ -7,11 +7,23 @@ export const borrowroutes=express.Router();
 bookroutes.post('/', async (req: Request, res: Response) => {
   try {
     const book = await Book.create(req.body);
+    
     res.status(201).json({
-      success: true,
-      message: 'Book created successfully',
-      data: book,
-    });
+  success: true,
+  message: 'Book created successfully',
+  data: {
+    _id: book._id,
+    title: book.title,
+    author: book.author,
+    genre: book.genre,
+    isbn: book.isbn,
+    description: book.description,
+    copies: book.copies,
+    available: book.available,
+    createdAt: book.createdAt,
+    updatedAt: book.updatedAt,
+  },
+});
   } catch (error) {
     res.status(400).json({
       success: false,
@@ -71,12 +83,11 @@ bookroutes.delete('/:bookId', async (req: Request, res: Response) => {
     const bookId = req.params.bookId 
     const book = await Book.findByIdAndDelete(bookId);
 
-    res.status(200).json({
+     res.status(200).json({
       success: true,
-      message: 'Book Deleted successfully',
-      data: book,
+      message: 'Book deleted successfully',
+      data: null,
     });
-  
   
 });
 

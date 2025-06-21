@@ -64,7 +64,14 @@ borrowroutes.post('/', async (req: Request, res: Response) => {
    res.status(201).json({
       success: true,
       message: 'Book borrowed successfully',
-      data: borrow,
+      data:{
+        _id:borrow._id,
+        book:borrow.book,
+        quantity:borrow.quantity,
+        dueDate:borrow.dueDate,
+         createdAt: borrow.createdAt,
+    updatedAt: borrow.updatedAt,
+      }
     });
 
   } catch (error) {

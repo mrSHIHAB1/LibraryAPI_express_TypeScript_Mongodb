@@ -7,6 +7,8 @@ export interface IBook {
   copies: number;
   available?: boolean;
   
+  createdAt?: Date;
+  updatedAt?: Date;
 }
  
 // export interface UserInstanceMethods{

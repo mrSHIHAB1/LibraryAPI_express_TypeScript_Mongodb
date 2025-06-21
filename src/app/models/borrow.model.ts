@@ -8,7 +8,15 @@ const borrowSchema = new Schema<IBorrow>(
     quantity: { type: Number, required: true, min: 1 },
     dueDate: { type: Date, required: true },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    toJSON: {
+      transform(doc, ret) {
+        delete ret.__v;
+        return ret;
+      },
+    },
+  }
 );
 
 borrowSchema.pre('save', function (next) {

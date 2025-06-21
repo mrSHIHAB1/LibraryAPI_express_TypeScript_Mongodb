@@ -16,7 +16,15 @@ const bookSchema = new Schema<IBook>(
     copies: { type: Number, required: true, min: 0 },
     available: { type: Boolean, default: true },
   },
-  { timestamps: true }
+  { timestamps: true,
+    toJSON: {
+      transform(doc, ret) {
+        delete ret.__v;
+        return ret;
+      }
+    }
+   },
+  
 );
 
 bookSchema.post('save', function (doc) {
